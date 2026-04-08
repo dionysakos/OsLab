@@ -26,6 +26,7 @@
 
 /* Dots indicate lines where you are free to insert code at will */
 pthread_mutex_t mutex;
+
 #if defined(SYNC_ATOMIC) ^ defined(SYNC_MUTEX) == 0
 #error You must #define exactly one of SYNC_ATOMIC or SYNC_MUTEX.
 #endif
@@ -46,7 +47,7 @@ void *increase_fn(void *arg)
 		if (USE_ATOMIC_OPS) {
 			/* ... */
 			/* You can modify the following line */
-			++(*ip);
+			__sync_add_and_fetch(ip,1);
 			/* ... */
 		} else {
 			/* ... */
@@ -80,7 +81,7 @@ void *decrease_fn(void *arg)
 		if (USE_ATOMIC_OPS) {
 			/* ... */
 			/* You can modify the following line */
-			--(*ip);
+			__sync_sub_and_fetch(ip,1);
 			/* ... */
 		} else {
 			/* ... */
