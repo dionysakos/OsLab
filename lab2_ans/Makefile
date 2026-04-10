@@ -9,7 +9,7 @@ CC = gcc
 CFLAGS = -Wall -O2 -pthread
 LIBS = 
 
-all: pthread-test simplesync-mutex simplesync-atomic mandel
+all: pthread-test simplesync-mutex simplesync-atomic mandel-sem mandel-cv
 
 ## Pthread test
 pthread-test: pthread-test.o
@@ -32,15 +32,26 @@ simplesync-atomic.o: simplesync.c
 	$(CC) $(CFLAGS) -DSYNC_ATOMIC -c -o simplesync-atomic.o simplesync.c
 
 
-## Mandel
-mandel: mandel-lib.o mandel.o
-	$(CC) $(CFLAGS) -o mandel mandel-lib.o mandel.o $(LIBS)
+## Mandel sync (two versions)
+mandel-sem: mandel-lib.o mandel-sem.o utils.o
+	$(CC) $(CFLAGS) -o mandel-sem mandel-lib.o mandel-sem.o utils.o $(LIBS)
+
+mandel-cv: mandel-lib.o mandel-cv.o utils.o
+	$(CC) $(CFLAGS) -o mandel-cv mandel-lib.o mandel-cv.o utils.o $(LIBS)
+
 
 mandel-lib.o: mandel-lib.h mandel-lib.c
-	$(CC) $(CFLAGS) -c -o mandel-lib.o mandel-lib.c $(LIBS)
+	$(CC) $(CFLAGS) -c -o mandel-lib.o mandel-lib.c  
 
-mandel.o: mandel.c
-	$(CC) $(CFLAGS) -c -o mandel.o mandel.c $(LIBS)
+mandel-sem.o: mandel.c utils.h 
+	$(CC) $(CFLAGS) -DSYNC_SEM -c -o mandel-sem.o mandel.c 
+
+mandel-cv.o: mandel.c utils.h
+	$(CC) $(CFLAGS) -DSYNC_CV -c -o mandel-cv.o mandel.c 
+
+
+utils.o: utils.c utils.h
+	$(CC) $(CFLAGS) -c utils.c -o utils.o 
 
 clean:
-	rm -f *.s *.o pthread-test simplesync-atomic simplesync-mutex mandel 
+	rm -f *.s *.o pthread-test simplesync-atomic simplesync-mutex mandel-sem mandel-cv 

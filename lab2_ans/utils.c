@@ -1,6 +1,10 @@
 #include "utils.h"
 #include <stdio.h>   
 #include <unistd.h> 
+#include <pthread.h>
+#include <stdlib.h>
+
+
 
 void check(int res, const char* msg){
     if(res==-1){
@@ -8,6 +12,7 @@ void check(int res, const char* msg){
         _exit(0);
     }
 }
+
 
 int safe_atoi(char *s, int *val)
 {
@@ -33,4 +38,13 @@ void *safe_malloc(size_t size)
 	}
 
 	return p;
+}
+
+void usage(char *argv0)
+{
+	fprintf(stderr, "Usage: %s thread_count \n\n"
+		"Exactly 1 argument required:\n"
+		"    thread_count: The number of threads to create.\n",
+		argv0);
+	_exit(1);
 }
