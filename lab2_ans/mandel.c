@@ -23,6 +23,7 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <pthread.h>
+#include <signal.h>
 
 
 
@@ -188,10 +189,26 @@ void* worker(void *arg){
 	return NULL;
 }
 
+void sigint_handler(int signum){
+	reset_xterm_color(1);
+	_exit(1);
+}
+
 int main(int argc, char **argv)
 {
+
 	if(argc!=2)
 		usage(argv[0]);
+	
+	struct sigaction sigint_sa;
+	sigint_sa.sa_handler = sigint_handler;
+	sigset_t mask;
+	sigemptyset(&mask);
+	sigint_sa.sa_mask = mask;
+	sigint_sa.sa_flags = 0;
+	check(sigaction(SIGINT, &sigint_sa, NULL), "sigaction");
+	
+	
 	
 	if (safe_atoi(argv[1], &NTHREADS) < 0 || NTHREADS <= 0) {
 		fprintf(stderr, "`%s' is not valid for `NTHREADS'\n", argv[1]);
@@ -249,7 +266,8 @@ int main(int argc, char **argv)
 			_exit(1);	
 		}
 	}
-	reset_xterm_color(1);
+	reset_xterm_color(1); // reset xterm color before exiting
+
 	#if USE_SEM
 		for(i=0;i<NTHREADS;++i){
 			check(sem_destroy(&local_lock[i]),"sem_destroy");
