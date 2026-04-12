@@ -1,0 +1,30 @@
+CC = gcc
+CFLAGS = -Wall -g
+
+TARGETS = front-end dispatcher worker
+
+all: $(TARGETS)
+
+front-end: front-end.o utils.o
+  $(CC) $(CFLAGS) utils.o front-end.o -o front-end
+
+front-end.o: utils.h front-end.c
+  $(CC) $(CFLAGS) -c front-end.c -o front-end.o
+
+dispatcher: dispatcher.o utils.o
+  $(CC) $(CFLAGS) utils.o dispatcher.o -o dispatcher
+
+dispatcher.o: utils.h disp_types.h dispatcher.c
+  $(CC) $(CFLAGS) -c dispatcher.c -o  dispatcher.o
+ 
+worker: worker.o utils.o
+  $(CC) $(CFLAGS) utils.o worker.o -o worker
+
+worker.o: worker.c utils.h disp_types.h
+  $(CC) $(CFLAGS) -c worker.c -o worker.o
+
+utils.o: utils.h utils.c
+  $(CC) $(CFLAGS) -c utils.c -o utils.o 
+
+clean: 
+  rm -f front-end dispatcher worker *.o

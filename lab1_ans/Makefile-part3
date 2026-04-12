@@ -1,0 +1,14 @@
+CC = gcc
+CFLAGS = -Wall -g
+
+pfork: utils.o pfork.o
+  $(CC) $(CFLAGS) utils.o pfork.o -o pfork
+
+pfork.o: pfork.c utils.h
+  $(CC) $(CFLAGS) -c pfork.c -o pfork.o
+
+utils.o: utils.c utils.h
+  $(CC) $(CFLAGS) -c utils.c -o utils.o
+ 
+clean: 
+  rm -f pfork *.o
