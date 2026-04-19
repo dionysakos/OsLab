@@ -1,4 +1,4 @@
-# Utilities Library :utils.{c,h}
+# Utilities Library: utils.{c,h}
 
 ## Functions:
 
