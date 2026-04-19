@@ -27,6 +27,12 @@ off_t total_processed=0;
 
 volatile sig_atomic_t info_req = 0;
 
+volatile sig_atomic_t terminate_dispatcher = 0;
+
+void sigterm_handler(int signum) {
+    terminate_dispatcher = 1;
+}
+
 void sigusr1_handler(int signum){
     info_req=1;
 }
@@ -97,12 +103,20 @@ int main(int argc, char **argv){
     sigchld_sa.sa_flags = SA_RESTART| SA_NOCLDSTOP;
     check(sigaction(SIGCHLD,&sigchld_sa,NULL),"Error at sigaction for SIGCHLD\n");
 
+    struct sigaction sigterm_sa;
+    sigset_t sigterm_mask;
+    sigemptyset(&sigterm_mask);
+    sigterm_sa.sa_handler = sigterm_handler;
+    sigterm_sa.sa_mask = sigterm_mask;
+    sigterm_sa.sa_flags = 0;    
+    check(sigaction(SIGTERM, &sigterm_sa, NULL), "Error at sigaction for SIGTERM\n");
+
     for(int i=0;i<MAX_WORKERS;++i) workers[i].is_active = 0; 
     for(int i=0;i<init_workers;++i) spawn(i);
 
     struct pollfd fds[1+MAX_WORKERS];   
     while(1){
-        if (active_workers == 0) break;
+        if (active_workers == 0 || terminate_dispatcher == 1) break;
 
         for(int i=0;i<MAX_WORKERS;++i){
             if(workers[i].is_active && !worker_busy[i]){
