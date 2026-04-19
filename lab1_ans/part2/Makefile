@@ -1,0 +1,34 @@
+CC = gcc
+CFLAGS = -Wall -g 
+   
+all: askisi1 askisi2 askisi3 askisi4
+   
+askisi1: askisi1.o utils.o
+	$(CC) $(CFLAGS) utils.o askisi1.o -o askisi1
+   
+askisi2: askisi2.o utils.o
+	$(CC) $(CFLAGS) utils.o askisi2.o -o askisi2
+  
+askisi3: askisi3.o utils.o
+	$(CC) $(CFLAGS) utils.o askisi3.o -o askisi3
+  
+askisi4: askisi4.o utils.o
+	$(CC) $(CFLAGS) utils.o askisi4.o -o askisi4
+  
+askisi1.o: askisi1.c utils.h
+	$(CC) $(CFLAGS) -c  askisi1.c -o askisi1.o
+  
+askisi2.o: askisi2.c utils.h
+	$(CC) $(CFLAGS) -c  askisi2.c -o askisi2.o
+  
+askisi3.o: askisi3.c utils.h
+	$(CC) $(CFLAGS) -c  askisi3.c -o askisi3.o
+  
+askisi4.o: askisi4.c utils.h
+	$(CC) $(CFLAGS) -c  askisi4.c -o askisi4.o
+
+utils.o: utils.c utils.h
+	$(CC) $(CFLAGS) -c  utils.c -o utils.o
+
+clean:
+	rm -f askisi1 askisi2 askisi3 askisi4 *.o
