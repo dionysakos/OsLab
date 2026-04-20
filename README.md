@@ -1,4 +1,4 @@
-# 🛠️ Operating Systems Laboratory - NTUA (2026)
+# Operating Systems Lab Projects - ECE, NTUA (2026)
 
 ## Overview
 This repository contains implementations for the core laboratory units of the "Operating Systems" course at ECE, NTUA. The projects cover process management, Inter-Process Communication (IPC), multithreaded programming, and synchronization mechanisms within a Unix environment.
