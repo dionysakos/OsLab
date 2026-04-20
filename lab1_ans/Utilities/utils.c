@@ -11,7 +11,7 @@ ssize_t writes(int fd,const void* msg,size_t len){
     do{
         wcnt = write(fd,ptr+idx,len-idx);
         if(wcnt<0){
-           if (errno == EINTR) continue;
+           if (errno == EINTR) continue; // syscall was interrupted, try again
            return -1;
         }
         idx+=wcnt;
@@ -34,7 +34,7 @@ ssize_t reads(int fd, void* buf, size_t len){
         rcnt = read(fd, ptr + idx, len - idx);
         if (rcnt == 0) return idx;
         if (rcnt < 0){
-           if (errno == EINTR) continue;
+           if (errno == EINTR) continue; //syscall was interrupted, try again
            return -1;
         }  
         idx += rcnt;
