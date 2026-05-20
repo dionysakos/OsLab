@@ -43,4 +43,15 @@ Common utility functions (found in `utils.{c,h}`) used across all exercises to e
 * **`perror_pthread`:** A macro designed to map pthread return codes to `errno` so that standard error reporting can be used.
 > For LAB 2, across with other useful, safe and checking functions.
 
-## LAB 3: <...>
+## LAB 3: Virtual Memory & Inter-Process Communication (IPC)
+This lab explores the Linux virtual memory system and implements advanced IPC mechanisms using shared memory and POSIX semaphores.
+
+* Virtual Memory Inspection: Analyzing process memory maps (/proc/[pid]/maps), understanding mmap() allocations (private, shared, anonymous, and file-backed), and observing low-level OS/hardware mechanisms like Demand Paging and Copy-on-Write (CoW) during fork().
+  
+* Parallel Mandelbrot: Parallelizing the Mandelbrot set generation using processes instead of threads. It implements two distinct synchronization architectures:
+  
+> *  With Semaphores (mandel_sem): Synchronizes direct terminal I/O using an array of POSIX semaphores placed in a shared memory region.
+
+> *  Without Semaphores (mandel_nosem): Achieves lock-free parallel computation by mapping a 1D shared memory array into a 2D buffer (Spatial Isolation), utilizing the parent process purely as a synchronization barrier (Fork-Join model) before sequential I/O.
+
+* Concurrent File Processing (pfork): Upgrading the Lab 1 IPC architecture. Multiple child processes scan a file in chunks and update a global counter in shared memory. It protects the critical section with a shared POSIX mutex (sem_t) and handles signals (SIGINT, sigsuspend) for safe, asynchronous status reporting by the parent process.
