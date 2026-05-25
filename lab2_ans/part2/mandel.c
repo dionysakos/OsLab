@@ -3,8 +3,6 @@
  *
  * A program to draw the Mandelbrot Set on a 256-color xterm.
  * 
- * Dionysis Katsetis < el23005
- * Stefanos Kargas   < el23059
  * 
  * Sychronized and parallelized version of the original mandel.c program, using POSIX threads.
  * With SEMAPHORES & CONDITION VARIABLES
